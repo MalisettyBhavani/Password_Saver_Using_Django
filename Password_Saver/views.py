@@ -7,28 +7,38 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
 from Password_Saver.models import AccountInfo
 from django.contrib.auth.models import User
-from Password_Saver.encrypt_decrypt import encrypt,decrypt
-from django.views.decorators.csrf import requires_csrf_token,csrf_exempt
-from bootstrap_modal_forms.generic import BSModalCreateView,BSModalDeleteView,BSModalUpdateView,BSModalDeleteView
+from Password_Saver.encrypt_decrypt import decrypt
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib import messages
 # Create your views here.
 def index(request):
-    reg_form = RegistrationForm()
     registered = False
+    reg_form = RegistrationForm()
+    error=None
     if request.method =="POST":
         reg_form = RegistrationForm(request.POST)
         if reg_form.is_valid():
-            reg_form = reg_form.save()
-            reg_form.set_password(reg_form.password)
-            reg_form.save() 
+            reg = reg_form.save()                   
+            reg.set_password(reg.password)          
+            reg_form.save()                         
             registered = True
-    return render(request,'registration.html',{'reg_form':reg_form,'registered':registered})
+            reg_form = RegistrationForm()
+        else:
+            print(reg_form.errors)
+            print(reg_form.errors.values())
+            print(list(reg_form.errors.values()))
+
+            error=list(reg_form.errors.values())[0]
+    return render(request,'registration.html',{'reg_form':reg_form,'registered':registered,'error':error})
+
+        
 
 def login_page(request):
     login_form = LoginForm()
     if request.method == "POST":
         username = request.POST.get("username")
         password = request.POST.get("password")
-        user = authenticate(username=username,password=password)
+        user = authenticate(request,username=username,password=password)
         if user:
             if user.is_active:
                 login(request,user)
@@ -36,7 +46,9 @@ def login_page(request):
             else:
                 return HttpResponse("User is Inactive!")
         else:
-            return HttpResponse("Invalid Credentials!")
+            print(login_form.errors)
+            messages.error(request,"You entered an incorrect username or password")
+            print(messages)
     return render(request,'login.html',{'login_form':login_form})
 
 @login_required
@@ -67,6 +79,7 @@ def add_acc_details(request):
             return HttpResponseRedirect(reverse("list"))
     else:
         add_details = AccountInfoForm(request.user)
+        print(add_details)
     return render(request,'add_account.html',{'add_account':add_details})
 
 def update_password(request,id):
@@ -80,6 +93,9 @@ def update_password(request,id):
         modify_password = UpdatePasswordForm()
     return render(request,'update_password.html',{'modify_password':modify_password})
 
+def updatetest(request):
+    return HttpResponse("hellooo")
+
 def delete_info(request,id):
     delete_obj=get_object_or_404(AccountInfo,id=id)
     if(request.method=="POST"):
@@ -87,6 +103,21 @@ def delete_info(request,id):
         return HttpResponseRedirect(reverse("list"))
     else:
         return render(request,"delete_acc.html",{})
+    
+def delete_infomodal(request):
+    if request.method=="POST":
+        id = request.POST.get("id")
+        current_user = request.user.id
+        current_user_objects = AccountInfo.objects.filter(user_id=current_user,id=id).values()
+        if len(current_user_objects)!=0:
+            delete_obj=get_object_or_404(AccountInfo,id=id)
+            delete_obj.delete()
+    else:
+        print("get")
+        print(request)
+
+    return HttpResponseRedirect(reverse("list"))
+    
     
 @csrf_exempt 
 def get_decrypted_data(request):

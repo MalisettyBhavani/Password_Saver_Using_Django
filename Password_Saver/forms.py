@@ -8,22 +8,34 @@ from bootstrap_modal_forms.forms import BSModalModelForm
 
 
 class RegistrationForm(UserCreationForm):
-    username = forms.CharField(label="User name",max_length=200)
-    email = forms.EmailField(label="Email ")
-    password1 = forms.CharField(label="Password ",widget= forms.PasswordInput())
-    password2 = forms.CharField(label="Confirm Password",widget=forms.PasswordInput())
+    username = forms.CharField(label="User name",max_length=200,widget=forms.TextInput(attrs={"placeholder":"Username","class":"form-control"}))
+    email = forms.EmailField(label="Email ",widget=forms.TextInput(attrs={"placeholder":"Email","class":"form-control"}))
+    password1 = forms.CharField(label="Password ",widget= forms.PasswordInput(attrs={"placeholder":"Password","class":"form-control"}))
+    password2 = forms.CharField(label="Confirm Password",widget=forms.PasswordInput(attrs={"placeholder":"Confirm Password","class":"form-control"}))
+    
     class Meta:
         model = User
         fields = ('username','email','password1','password2')
     def __str__(self):
         return self.username
+    # def clean(self):
+    #     if self.is_valid():
+    #         # user_data = User.objects.filter(username=self.cleaned_data["username"]).values("username")
+            # if len(user_data)!=0:
+            #     raise forms.ValidationError("User already exists!")
+            # if self.cleaned_data["password1"]!=self.cleaned_data["password2"]:
+            #     raise forms.ValidationError("The passwords don't match!")
 
 class LoginForm(forms.ModelForm):
-    username = forms.CharField(max_length=200)
-    password = forms.CharField(label="Password",widget=forms.PasswordInput())
+    username = forms.CharField(max_length=200,widget=forms.TextInput(attrs={"placeholder":"Username","class":"form-control"}))
+    password = forms.CharField(label="Password",widget=forms.PasswordInput(attrs={"placeholder":"Password","class":"form-control"}))
     class Meta:
         model = User
         fields = ('username','password')
+    def clean(self):
+        if self.is_valid():
+            print(self.cleaned_data["username"])
+            print(self.cleaned_data["password"])
 
 class AccountInfoForm(forms.ModelForm):
     password = forms.CharField(label="Password",widget=forms.PasswordInput())
@@ -44,6 +56,8 @@ class AccountInfoForm(forms.ModelForm):
     def clean(self):
         if(self.is_valid()):
             print(self.user.id)
+            print(self.user)
+            print(type(self.user))
             data = AccountInfo.objects.filter(user__id=self.user.id).values()
             l=list(data)
             form_acc_name=self.cleaned_data["account_name"]
@@ -58,6 +72,7 @@ class UpdatePasswordForm(forms.ModelForm):
     class Meta:
         model = AccountInfo
         fields = ('password','confirm_password')
+    
     def clean(self):
         if(self.is_valid()):
             if(self.cleaned_data["password"]!=self.cleaned_data["confirm_password"]):
