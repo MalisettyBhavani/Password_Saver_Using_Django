@@ -20,76 +20,109 @@
         .toggle{
             -webkit-text-security: none;
         }
+        .alert-success
+        /* {
+            opacity: 0;
+            display:none; */
+        
+
     </style>
 </head>
 <body>
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" id="deletemodal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form method="POST" action="{% url 'deletedata' %}" id="myForm">
+                <form method="POST" action="{% url 'deletedata' %}">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5">Modal title</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
                         {% csrf_token %}
                         <i class="fas fa-trash-alt"></i>
                         <strong>Are you sure you want to delete this item?</strong><br>
-                                </div>
-                                <div class="modal-footer">
-                                <input type="submit" class="btn btn-danger" id="Modaldeletebtn" value="Delete">
+                    </div>
+                    <div class="modal-footer">
+                        <input type="submit" class="btn btn-danger" id="Modaldeletebtn" value="Delete">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                         <input type="hidden" id="record_id"  name="id">
+                    </div>
                 </form>
-                </div>
             </div>
         </div>
     </div>
-    <div class="container pt-3">
-        <div class="d-flex justify-content-between my-2">
-            <h4>Welcome {{ user.username|capfirst }} </h4>
-            <a href="{% url 'logout' %}" class="btn btn-warning btn-sm"> 
-                <i class="fa fa-sign-out-alt"></i>
-                <span>Logout</span>
-            </a>
+    <div class="modal fade" id="updatemodal" tabindex="-1" >
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <form method="POST" name="myform" action="{% url 'update' %}">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Modal title</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        {% csrf_token %}
+                        <div id="error"></div>
+                        <label class="form-label">Password </label>
+                        <input type="password" name="password" class="form-control" required>
+                        <label class="form-label">Confirm Password</label>
+                        <input type="password" name="confirmpassword" class="form-control" required>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="hidden" id="update_rec_id"  name="id">
+                        <button class="btn btn-primary" id="updatebtn">Update</button>
+                        <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+            </div>
         </div>
-        {% if details.values %}
-        <div class="alert alert-info"> Here are the list of passwords which you have saved!</div>
-                <table class="table">
-                    <tr>
-                        <th>Account Name </th>
-                        <th>User Name </th>
-                        <th> Password </th>
-                        <th> Show Password </th>
-                        <th> Update </th>
-                        <th> Delete </th>
-                    </tr>
-
-                    {% for password_list in details %}
-                    <tr>
-                        <td>{{ password_list.account_name }}</td>
-                        <td>{{ password_list.user_name }}</td>
-                        <td class="pwd">{{ password_list.password }}</td>
-                        <td class="showPassword"><span class="fa fa-eye-slash" style="margin-left: 50px;" id="togglePwd"></span></td>
-                        <!-- <td>{{ password_list.id }}</td> -->
-                        <td> <a class="btn btn-dark btn-sm" href="{% url 'update' password_list.id %}"> Update </a></td>
-                        <td class="deletebtn2"><a class="del btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#exampleModal" data-id="{{ password_list.id }}"> Delete </a></td></td>
+    </div>
+    <div>
+        <div class="container pt-3">
+            <div class="d-flex justify-content-between my-2">
+                <h4>Welcome {{ user.username|capfirst }} </h4>
+                <a href="{% url 'logout' %}" class="btn btn-warning btn-sm"> 
+                    <i class="fa fa-sign-out-alt"></i>
+                    <span>Logout</span>
+                </a>
+            </div>
+            {% if details.values %}
+                <div class="alert alert-info"> Here are the list of passwords which you have saved!</div>
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="message alert alert-success">{{ message }}</div>
                         {% endfor %}
-                    </tr>
-                </table>
+                    {% endif %}
+                    <table class="table">
+                        <tr>
+                            <th>Account Name </th>
+                            <th>User Name </th>
+                            <th> Password </th>
+                            <th> Show Password </th>
+                            <th> Update </th>
+                            <th> Delete </th>
+                        </tr>
+                        {% for password_list in details %}
+                        <tr>
+                            <td>{{ password_list.account_name }}</td>
+                            <td>{{ password_list.user_name }}</td>
+                            <td class="pwd">{{ password_list.password }}</td>
+                            <td class="showPassword"><span class="fa fa-eye-slash" style="margin-left: 50px;" id="togglePwd"></span></td>
+                            <td> <a class="update btn btn-dark btn-sm" href="{% url 'update' %}"  data-bs-toggle="modal" data-bs-target="#updatemodal" data-id="{{ password_list.id }}"> Update </a></td>
+                            <td class="deletebtn2"><a class="del btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deletemodal" data-id="{{ password_list.id }}"> Delete </a></td></td>
+                            {% endfor %}
+                        </tr>
+                    </table>
             {% else %}
-            <div class="alert alert-warning">You haven't stored any passwords!</div>
+                <div class="alert alert-warning">You haven't stored any passwords!</div>
             {% endif %}
-            <a id="add-account" href="{% url 'add_acc_details' %}" class="btn btn-primary btn-sm">Add</a>
-            
-
+                <a id="add-account" href="{% url 'add_acc_details' %}" class="btn btn-primary btn-sm">Add</a>
+        </div>
     </div>
     <script>
         $('.showPassword').on("click",function(){
             var pwd = $(this).prev("td")
             pwd[0].style["-webkit-text-security"]="none"
             let pwd_icon_class = this.querySelector("#togglePwd")
-            console.log(pwd_icon_class)
             pwd_icon_class.className ="fa fa-eye"
             setTimeout(hidepassword,2000,pwd,pwd_icon_class)
 
@@ -103,13 +136,37 @@
         var id;
         $(".del").on("click",function(){
             var element = $(this)[0].getAttribute("data-id")
-            console.log(element)
             id=element
             var ele = document.getElementById("record_id")
             ele.setAttribute("value",id)
 
         })
-        
+        $(".update").on("click",function(){
+            var element = $(this)[0].getAttribute("data-id")
+            id=element
+            var element = document.getElementById("update_rec_id")
+            element.setAttribute("value",id)
+        })
+        $("#updatebtn").on("click",function(clickEvent){
+            var password = myform.password.value
+            console.log(password)
+            var  c_password = myform.confirmpassword.value
+            console.log(c_password)
+            if(password!=c_password)
+            {
+                clickEvent.preventDefault()
+                var error = document.getElementById("error")
+                error.innerText="The two passwords didn't match!"
+            }
+            else
+            {
+                $("#updatemodal").modal('hide')
+            }
+
+        })
+        var message = document.getElementsByClassName("message")[0]
+        setTimeout(function(){
+        message.remove()},3000)
     </script>
     
 </body>

@@ -24,9 +24,6 @@ urlpatterns = [
     path("login/list/",views.list_passwords,name="list"),
     path("logout/",views.user_logout,name="logout"),
     path("add_acc_details/",views.add_acc_details,name="add_acc_details"),
-    path("update/<int:id>/",views.update_password,name="update"),
-    path("update/",views.updatetest,name="updatepassword"),
-    path("delete/<int:id>/",views.delete_info,name="delete"),
-    path("delete/",views.delete_infomodal,name="deletedata"),
-    path("decrypt",views.get_decrypted_data,name="decrypted_data")
+    path("update/",views.update_password,name="update"),
+    path("delete/",views.delete_info,name="deletedata")
 ]

@@ -3,8 +3,7 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from Password_Saver.models import AccountInfo
 from django.forms import ValidationError
-from Password_Saver.encrypt_decrypt import encrypt,decrypt
-from bootstrap_modal_forms.forms import BSModalModelForm 
+from Password_Saver.encrypt_decrypt import encrypt
 
 
 class RegistrationForm(UserCreationForm):
@@ -18,13 +17,6 @@ class RegistrationForm(UserCreationForm):
         fields = ('username','email','password1','password2')
     def __str__(self):
         return self.username
-    # def clean(self):
-    #     if self.is_valid():
-    #         # user_data = User.objects.filter(username=self.cleaned_data["username"]).values("username")
-            # if len(user_data)!=0:
-            #     raise forms.ValidationError("User already exists!")
-            # if self.cleaned_data["password1"]!=self.cleaned_data["password2"]:
-            #     raise forms.ValidationError("The passwords don't match!")
 
 class LoginForm(forms.ModelForm):
     username = forms.CharField(max_length=200,widget=forms.TextInput(attrs={"placeholder":"Username","class":"form-control"}))
@@ -32,10 +24,6 @@ class LoginForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ('username','password')
-    def clean(self):
-        if self.is_valid():
-            print(self.cleaned_data["username"])
-            print(self.cleaned_data["password"])
 
 class AccountInfoForm(forms.ModelForm):
     password = forms.CharField(label="Password",widget=forms.PasswordInput())
@@ -55,9 +43,6 @@ class AccountInfoForm(forms.ModelForm):
     
     def clean(self):
         if(self.is_valid()):
-            print(self.user.id)
-            print(self.user)
-            print(type(self.user))
             data = AccountInfo.objects.filter(user__id=self.user.id).values()
             l=list(data)
             form_acc_name=self.cleaned_data["account_name"]
@@ -65,20 +50,6 @@ class AccountInfoForm(forms.ModelForm):
                 acc_name = i.get("account_name")
                 if acc_name.strip().lower()==form_acc_name.strip().lower():
                     raise ValidationError("This account info already exists!")
-            
-class UpdatePasswordForm(forms.ModelForm):
-    password = forms.CharField(max_length=200,widget=forms.PasswordInput())
-    confirm_password = forms.CharField(label="Confirm Password ",max_length=200,widget=forms.PasswordInput())
-    class Meta:
-        model = AccountInfo
-        fields = ('password','confirm_password')
-    
-    def clean(self):
-        if(self.is_valid()):
-            if(self.cleaned_data["password"]!=self.cleaned_data["confirm_password"]):
-                raise ValidationError("The passwords don't match!!")
-            else:
-                self.cleaned_data["password"] = encrypt(self.cleaned_data["password"])
-        
+                    
                 
 

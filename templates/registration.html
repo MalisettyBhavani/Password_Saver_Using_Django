@@ -46,18 +46,10 @@
             <form method="POST">
                 {% csrf_token %}
                 {% for i in reg_form %}
-                    <div>{{ i }}</div> 
-                    <!-- {{ i.errors }} -->
+                    <div>{{ i }}</div>
                 {% endfor %} 
                 {% if error %} 
                     {{ error }}
-                    <!-- <div class="errorlist">
-                        {% for field, errors in reg_form.errors.items %}
-                            {% for error in errors %}
-                                <p class="text-danger fw-bold mb-1">{{ error }}</p>
-                            {% endfor %}
-                        {% endfor %}
-                    </div> -->
                 {% endif %}
                 <div class="input-group">
                     <input type="submit" class="bg btn btn-primary rounded-pill" value="Register" data-bs-toggle="modal" data-bs-target="#registered-modal" 

@@ -1,15 +1,13 @@
 from django.shortcuts import render,get_object_or_404
-from django.urls import reverse,reverse_lazy
-from Password_Saver.forms import RegistrationForm,LoginForm,AccountInfoForm,UpdatePasswordForm
+from django.urls import reverse
+from Password_Saver.forms import RegistrationForm,LoginForm,AccountInfoForm
 from django.contrib.auth import authenticate,login,logout
-from django.http import HttpResponse,HttpResponseRedirect,JsonResponse
+from django.http import HttpResponse,HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import AuthenticationForm
 from Password_Saver.models import AccountInfo
-from django.contrib.auth.models import User
-from Password_Saver.encrypt_decrypt import decrypt
-from django.views.decorators.csrf import csrf_exempt
+from Password_Saver.encrypt_decrypt import encrypt,decrypt
 from django.contrib import messages
+import time
 # Create your views here.
 def index(request):
     registered = False
@@ -29,9 +27,7 @@ def index(request):
             print(list(reg_form.errors.values()))
 
             error=list(reg_form.errors.values())[0]
-    return render(request,'registration.html',{'reg_form':reg_form,'registered':registered,'error':error})
-
-        
+    return render(request,'registration.html',{'reg_form':reg_form,'registered':registered,'error':error})    
 
 def login_page(request):
     login_form = LoginForm()
@@ -46,14 +42,12 @@ def login_page(request):
             else:
                 return HttpResponse("User is Inactive!")
         else:
-            print(login_form.errors)
             messages.error(request,"You entered an incorrect username or password")
-            print(messages)
     return render(request,'login.html',{'login_form':login_form})
 
 @login_required
 def list_passwords(request): 
-    if request.user.is_authenticated:                                         
+    if request.user.is_authenticated:                                        
         details=AccountInfo.objects.values().filter(user__username=request.user)
         x=details#list of dictionaries
         for i in x:
@@ -62,7 +56,7 @@ def list_passwords(request):
             except:
                 pass
         return render(request,'home.html',{'details':details})
-
+    
 @login_required
 def user_logout(request):
     logout(request)
@@ -79,32 +73,18 @@ def add_acc_details(request):
             return HttpResponseRedirect(reverse("list"))
     else:
         add_details = AccountInfoForm(request.user)
-        print(add_details)
     return render(request,'add_account.html',{'add_account':add_details})
 
-def update_password(request,id):
-    update_obj=get_object_or_404(AccountInfo,id=id)
-    if(request.method=="POST"):
-        modify_password = UpdatePasswordForm(request.POST,instance=update_obj)
-        if modify_password.is_valid():
-            modify_password.save()
-            return HttpResponseRedirect(reverse("list"))
-    else:
-        modify_password = UpdatePasswordForm()
-    return render(request,'update_password.html',{'modify_password':modify_password})
-
-def updatetest(request):
-    return HttpResponse("hellooo")
-
-def delete_info(request,id):
-    delete_obj=get_object_or_404(AccountInfo,id=id)
-    if(request.method=="POST"):
-        delete_obj.delete()
+def update_password(request):
+    if request.method == "POST":
+        password = request.POST.get("password")
+        encrypted_password = encrypt(password)
+        id = request.POST.get("id")
+        AccountInfo.objects.filter(user_id=request.user.id,id=id).update(password=encrypted_password)
+        messages.success(request,"Password updated successfully")
         return HttpResponseRedirect(reverse("list"))
-    else:
-        return render(request,"delete_acc.html",{})
-    
-def delete_infomodal(request):
+
+def delete_info(request):
     if request.method=="POST":
         id = request.POST.get("id")
         current_user = request.user.id
@@ -112,19 +92,7 @@ def delete_infomodal(request):
         if len(current_user_objects)!=0:
             delete_obj=get_object_or_404(AccountInfo,id=id)
             delete_obj.delete()
-    else:
-        print("get")
-        print(request)
-
-    return HttpResponseRedirect(reverse("list"))
-    
-    
-@csrf_exempt 
-def get_decrypted_data(request):
-    if  request.method =="POST":
-        password = request.POST
-        decrypted_password = decrypt(password['decrypt_password'])
-        return JsonResponse({"instance": decrypted_password}, status=200)
+        return HttpResponseRedirect(reverse("list"))
     
 
 
