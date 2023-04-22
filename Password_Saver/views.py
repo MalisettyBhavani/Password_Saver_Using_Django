@@ -7,7 +7,6 @@ from django.contrib.auth.decorators import login_required
 from Password_Saver.models import AccountInfo
 from Password_Saver.encrypt_decrypt import encrypt,decrypt
 from django.contrib import messages
-import time
 # Create your views here.
 def index(request):
     registered = False
@@ -84,17 +83,19 @@ def add_acc(request):
             return HttpResponseRedirect(reverse("list"))
         else:
             messages.warning(request,"This account info already exists!")
-            #print(messages.get_messages(request))###this is getting printed in console.log
             return HttpResponseRedirect(reverse("list"))
-
 
 def update_password(request):
     if request.method == "POST":
         password = request.POST.get("password")
         encrypted_password = encrypt(password)
         id = request.POST.get("id")
-        update_data_obj=AccountInfo.objects.filter(user_id=request.user.id,id=id).values().update(password=encrypted_password)
-        messages.success(request,"Password updated successfully")
+        update_data_obj=AccountInfo.objects.filter(user_id=request.user.id,id=id).values()
+        if len(update_data_obj)==0:
+            messages.warning(request,"An error occured while updating. Please try again")
+        else:
+            update_data_obj.update(password=encrypted_password)
+            messages.success(request,"Password updated successfully")
         return HttpResponseRedirect(reverse("list"))
 
 def delete_info(request):
@@ -105,7 +106,9 @@ def delete_info(request):
         if len(current_user_objects)!=0:
             delete_obj=get_object_or_404(AccountInfo,id=id)
             delete_obj.delete()
-        messages.success(request,"An entry has been successfully deleted")
+            messages.success(request,"An entry has been successfully deleted")
+        else:
+            messages.warning(request,"An error occured while deleting. Please try again")
         return HttpResponseRedirect(reverse("list"))
     
 

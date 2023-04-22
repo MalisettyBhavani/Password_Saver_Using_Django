@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.2/css/all.min.css"
-        integrity="sha512-3M00D/rn8n+2ZVXBO9Hib0GKNpkm8MSUU/e2VNthDyBYxKWG+BftNYYcuEjXlyrSO637tidzMBXfE7sQm0INUg=="
-        crossorigin="anonymous" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.2/css/all.min.css" integrity="sha512-3M00D/rn8n+2ZVXBO9Hib0GKNpkm8MSUU/e2VNthDyBYxKWG+BftNYYcuEjXlyrSO637tidzMBXfE7sQm0INUg==" crossorigin="anonymous" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
     <link rel="stylesheet" href = "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" 
@@ -14,16 +12,26 @@
     <script src="https://kit.fontawesome.com/a076d05399.js"></script>
     <title>Document</title>
     <style>
-        .pwd {
+        .pwd 
+        {
             -webkit-text-security: disc;
         }
-        .toggle{
+
+        .toggle
+        {
             -webkit-text-security: none;
         }
-        .alert-danger
+
+        .hide
         {
             opacity:0;
             display: none;
+        }
+
+        .display
+        {
+            opacity : 1;
+            display : block;
         }
         .message
         {
@@ -33,12 +41,14 @@
             height: 100px;
             transition: all 0.3s ease-out;
         }
+
         .form-control
         {
             height: 40px;
             border: none;
             border-radius: 10px;
         }
+
         .form-control:focus
         {
             box-shadow: none;
@@ -51,13 +61,16 @@
             border-radius: 10px;
         }
 
-        .table{
+        .table
+        {
             transition: all 2s ease-in-out;
         }
-        .close:focus
+
+        .updtclose:focus, .addbtnclose:focus
         {
             box-shadow: none;
         }
+
     </style>
 </head>
 <body>
@@ -67,7 +80,7 @@
                 <form method="POST" action="{% url 'deletedata' %}">
                     <div class="modal-header">
                         <h1 class="modal-title fs-5">Delete</h1>
-                        <button type="button" class="close btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         {% csrf_token %}
@@ -75,9 +88,9 @@
                         <strong>Are you sure you want to delete this item?</strong><br>
                     </div>
                     <div class="modal-footer">
-                        <input type="submit" class="btn btn-danger" id="Modaldeletebtn" value="Delete">
+                        <input type="submit" class="btn btn-danger" value="Delete">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <input type="hidden" id="record_id"  name="id">
+                        <input type="hidden" id="delete_record_id"  name="id">
                     </div>
                 </form>
             </div>
@@ -88,12 +101,12 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Update Password</h5>
-                    <button type="button" class="close btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    <button type="button" class="updtclose btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <form method="POST" name="myform" action="{% url 'update' %}">
                     <div class="modal-body">
                         {% csrf_token %}
-                        <div id="updt_form_error"class="alert alert-danger"></div>
+                        <div class="alert alert-danger updt_form_error hide"></div>
                         <div class="outerdiv my-4">
                             <input type="password" name="password" class="form-control" value="" placeholder="Password" required>
                             <span class="fa fa-eye-slash mx-2 displaypassword"></span>
@@ -106,7 +119,7 @@
                     <div class="modal-footer">
                         <input type="hidden" id="update_rec_id"  name="id">
                         <input type="submit" class="btn btn-primary" id="updatebtn" role="button" value="Update">
-                        <button type="button" class="close btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="button" class="updtclose btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                     </div>
                 </form>
             </div>
@@ -115,28 +128,29 @@
     <div class="modal fade" id="addmodal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-                <form method="POST" name="addform" id="addform" action="{% url 'add_account' %}">
+                <form method="POST" name="addform" action="{% url 'add_account' %}">
                     <div class="modal-header">
                         <h5 class="modal-title">Add Details</h5>
-                        <button type="button" class="close btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <button type="button" class="addbtnclose btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         {% csrf_token %}
-                        <div id="add_form_error"></div>
+                        <div class="alert alert-danger add_form_error hide"></div>
                         <div class="outerdiv my-4">
-                            <input type="text" name="account_name" class="form-control" placeholder="Account Name" required>
+                            <input type="text" name="account_name" class="form-control" placeholder="Account Name">
                         </div>
                         <div class="outerdiv my-4">
-                            <input type="text" name="user_name" class="form-control" placeholder="User Name" required>
+                            <input type="text" name="user_name" class="form-control" placeholder="User Name">
                         </div>
                         <div class="outerdiv my-4">
-                            <input type="password" name="password" class="form-control inputpassword"placeholder="Password" required>
+                            <input type="password" name="password" class="form-control inputpassword"placeholder="Password">
                             <span class="fa fa-eye-slash mx-2 displaypassword"></span>
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" id="modaladdaccbtn">Add</button>
-                        <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <input type="submit" class="btn btn-primary" id="modaladdaccbtn" role="button" value="Add">
+                        <button type="button" class="addbtnclose btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    
                     </div>
                 </form>
             </div>
@@ -176,9 +190,9 @@
                             <td>{{ password_list.account_name }}</td>
                             <td>{{ password_list.user_name }}</td>
                             <td class="pwd">{{ password_list.password }}</td>
-                            <td class="showPassword"><span class="fa fa-eye-slash" style="margin-left: 50px;" id="togglePwd"></span></td>
-                            <td> <a class="update btn btn-dark btn-sm" href="{% url 'update' %}"  data-bs-toggle="modal" data-bs-target="#updatemodal" data-id="{{ password_list.id }}"> Update </a></td>
-                            <td class="deletebtn2"><a class="del btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deletemodal" data-id="{{ password_list.id }}"> Delete </a></td>
+                            <td class="togglePwdicon"><span class="fa fa-eye-slash" style="margin-left: 50px;"></span></td>
+                            <td> <a class="update btn btn-dark btn-sm" data-bs-toggle="modal" data-bs-target="#updatemodal" data-id="{{ password_list.id }}"> Update </a></td>
+                            <td><a class="del btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deletemodal" data-id="{{ password_list.id }}"> Delete </a></td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -200,113 +214,118 @@
                 outer.style["border"] = "1px solid #8c8c8c"
                 })
             }
-        $('.showPassword').on("click",function(){
-            var pwd = $(this).prev("td")
-            pwd[0].style["-webkit-text-security"]="none"
-            let pwd_icon_class = this.querySelector("#togglePwd")
-            pwd_icon_class.className ="fa fa-eye"
-            setTimeout(hidepassword,2000,pwd,pwd_icon_class)
-
+        $('.togglePwdicon').on("click",function(){
+            var password = $(this).prev("td")
+            password[0].style["-webkit-text-security"]="none"
+            var icon =$(this)[0].firstChild
+            icon.classList.remove("fa-eye-slash")
+            icon.classList.add("fa-eye")
+                        
+            setTimeout(function(){
+            password[0].style["-webkit-text-security"]="disc"
+            icon.classList.remove("fa-eye")
+            icon.classList.add("fa-eye-slash")
+            },2000)
         })
+
         $('.displaypassword').on("click",function(){
             let showpwdicon = $(this)[0]
             var pwd = $(this).prev("input")[0]
             pwd.setAttribute("type","text")
-            showpwdicon.className="fa fa-eye mx-2 displaypassword"
+            showpwdicon.classList.remove("fa-eye-slash")
+            showpwdicon.classList.add("fa-eye")
             setTimeout(function(){
                 pwd.setAttribute("type","password")
-                showpwdicon.className="fa fa-eye-slash mx-2 displaypassword" 
+                showpwdicon.classList.remove("fa-eye")
+                showpwdicon.classList.add("fa-eye-slash")
             },3000)
         })
-        function hidepassword(pwd,pwd_icon_class)
-        {
-            pwd[0].style["-webkit-text-security"]="disc"
-            pwd_icon_class.className ="fa fa-eye-slash"
-        }
-        
-        var id;
-        $(".del").on("click",function(){
-            var element = $(this)[0].getAttribute("data-id")
-            id=element
-            var ele = document.getElementById("record_id")
-            ele.setAttribute("value",id)
-
-        })
         $(".update").on("click",function(){
+            var id
             var element = $(this)[0].getAttribute("data-id")
             id=element
+            console.log(id)
             var element = document.getElementById("update_rec_id")
             element.setAttribute("value",id)
         })
         $("#updatebtn").on("click",function(clickEvent){
             var password = myform.password.value
             var  c_password = myform.confirmpassword.value
-            var error = document.getElementById("updt_form_error")
-            var ele= document.getElementsByClassName("alert-danger")[0]
+            var updateform_error= document.getElementsByClassName("updt_form_error")[0]
             if(password==="" || c_password==="")
             {
                 clickEvent.preventDefault()
-                ele.style.opacity = 1
-                ele.style.display = "block"
-                error.innerText ="The fields cannot be empty"
-                setTimeout(function(){
-                error.innerText="";
-                ele.style.opacity = 0;
-                ele.style.display = "none";
-                },3000)
-
-                
+                updateform_error.classList.remove("hide")
+                updateform_error.classList.add("display")
+                updateform_error.innerText ="The fields cannot be empty"
+                change_style(updateform_error)
             }
             else if(c_password!=password)
             {
                 clickEvent.preventDefault()
-                ele.style.opacity = 1
-                ele.style.display = "block"
-                error.innerText="The two passwords didn't match!"
-                setTimeout(function(){
-                error.innerText="";
-                ele.style.opacity = 0;
-                ele.style.display = "none";
-                },3000)
-                
+                updateform_error.classList.remove("hide")
+                updateform_error.classList.add("display")
+                updateform_error.innerText="The two passwords didn't match!"
+                change_style(updateform_error) 
             }
             else
             {
-                error.innerText=""
-                password.innerText=""
-                c_password.innerText=""
+                password.value=""
+                c_password.value=""
                 $("#updatemodal").modal('hide')
-                var x = document.getElementsByClassName("message")[0]
-                console.log(x)
             }
         })
+
+        function change_style(element)
+        {
+            setTimeout(function(){
+                element.classList.remove("display")
+                element.classList.add("hide")},
+                3000)
+        }
+
+        $(".del").on("click",function(){
+            var id
+            var element = $(this)[0].getAttribute("data-id")
+            id=element
+            var ele = document.getElementById("delete_record_id")
+            ele.setAttribute("value",id)
+        })
+
         var message = document.getElementsByClassName("message")[0]
         setTimeout(function(){
             message.style.visibility = "hidden"
             message.style.height = 0
         },3000)
+
         $("#modaladdaccbtn").on("click",function(clickEvent){
-            console.log("hello there!")
             var account_name = addform.account_name.value
             var  user_name = addform.user_name.value
             var password = addform.password.value
-            var error = document.getElementById("add_form_error")
-            console.log(account_name)
-            console.log(user_name)
-            console.log(password)
-            if(account_name==="" || user_name===""|| password==="")
+            var addform_error= document.getElementsByClassName("add_form_error")[0]
+            var text="The fields cannot be empty"
+            if(account_name==="" || user_name==="" || password==="")
             {
                 clickEvent.preventDefault()
-                console.log("empty")
-                error.innerHTML= "The fields cannot be empty"
+                addform_error.classList.add("display")
+                addform_error.classList.add("hide")
+                addform_error.innerHTML= text
+                change_style(addform_error)
             }
             else
             {
                 document.getElementById("addform").submit()
             }
         })
-        $(".close").on("click",function(){
-            myform.input.value=""
+        $(".updtclose").on("click",function(){
+            myform.password.value=""
+            myform.confirmpassword.value=""
+            document.getElementById("update_rec_id").removeAttribute("value")
+        })
+        $(".addbtnclose").on("click",function(){
+            addform.account_name.value=""
+            addform.user_name.value=""
+            addform.password.value=""
         })
     </script>
 

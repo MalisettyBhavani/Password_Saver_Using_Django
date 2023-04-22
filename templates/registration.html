@@ -5,15 +5,13 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.2/css/all.min.css"
-    integrity="sha512-3M00D/rn8n+2ZVXBO9Hib0GKNpkm8MSUU/e2VNthDyBYxKWG+BftNYYcuEjXlyrSO637tidzMBXfE7sQm0INUg=="
-    crossorigin="anonymous" />
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
-<link rel="stylesheet" href = "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" 
-integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
-<script src="https://kit.fontawesome.com/a076d05399.js"></script>
-<link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.2/css/all.min.css" integrity="sha512-3M00D/rn8n+2ZVXBO9Hib0GKNpkm8MSUU/e2VNthDyBYxKWG+BftNYYcuEjXlyrSO637tidzMBXfE7sQm0INUg==" crossorigin="anonymous" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <link rel="stylesheet" href = "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" 
+    integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <title>Register</title>
     <style>
         .container
@@ -22,16 +20,13 @@ integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQS
         }
     </style>
 </head>
-
 <body class="background">
     <div class="container">
         <h3 class="fw-bold text-center">Register</h3>
             <form method="POST">
                 {% csrf_token %}
                 {% for i in reg_form %}
-                    <div class="outerdiv my-4">
-                        {{ i }}
-                    </div>
+                    <div class="outerdiv my-4">{{ i }}</div>
                 {% endfor %} 
                 {% if error %} 
                     {{ error }}
@@ -66,6 +61,21 @@ integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQS
         {% endif %}
     </div>
     <script>
+        var span = "<span class='fa fa-eye-slash mx-2 displaypassword'></span>"
+        document.getElementsByClassName("outerdiv")[2].innerHTML+=span
+        document.getElementsByClassName("outerdiv")[3].innerHTML+=span
+        $('.displaypassword').on("click",function(){
+            let showpwdicon = $(this)[0]
+            var pwd = $(this).prev("input")[0]
+            pwd.setAttribute("type","text")
+            showpwdicon.classList.remove("fa-eye-slash")
+            showpwdicon.classList.add("fa-eye")
+            setTimeout(function(){
+                pwd.setAttribute("type","password")
+                showpwdicon.classList.remove("fa-eye")
+                showpwdicon.classList.add("fa-eye-slash")
+            },3000)
+        })
         var isregistered = "{{ registered }}"
         if (isregistered=="True")
         {
@@ -76,13 +86,20 @@ integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQS
         }
         function showError()
         {
-            console.log("hello world")
             let element = "{{ reg_form.erros }}"
-            console.log(element)
         }
-        var ele = document.getElementById("id_password1")
-        var icon = document.createElement('span'); // is a node
-        icon.setAttribute("class","fa fa-eye-slash mx-2 displaypassword")
+        var input = document.getElementsByClassName("form-control")
+        for(i=0;i<input.length;i++){
+            input[i].addEventListener("focus",() => {
+                var outer = event.srcElement.parentNode
+                outer.style["border"] = "2px solid #657dde"
+                })
+            input[i].addEventListener("focusout",() => {
+                var outer = event.srcElement.parentNode
+                outer.style["border"] = "1px solid #8c8c8c"
+                })
+            }
+
     </script>
 </body>
 </html>
