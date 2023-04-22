@@ -20,12 +20,44 @@
         .toggle{
             -webkit-text-security: none;
         }
-        .alert-success
-        /* {
-            opacity: 0;
-            display:none; */
-        
+        .alert-danger
+        {
+            opacity:0;
+            display: none;
+        }
+        .message
+        {
+            width: 400px; 
+            text-align: center;
+            margin: auto;
+            height: 100px;
+            transition: all 0.3s ease-out;
+        }
+        .form-control
+        {
+            height: 40px;
+            border: none;
+            border-radius: 10px;
+        }
+        .form-control:focus
+        {
+            box-shadow: none;
+        }
+        .outerdiv
+        {
+            display: flex;
+            align-items: center;
+            border: 1px solid #8c8c8c;
+            border-radius: 10px;
+        }
 
+        .table{
+            transition: all 2s ease-in-out;
+        }
+        .close:focus
+        {
+            box-shadow: none;
+        }
     </style>
 </head>
 <body>
@@ -34,8 +66,8 @@
             <div class="modal-content">
                 <form method="POST" action="{% url 'deletedata' %}">
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5">Modal title</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <h1 class="modal-title fs-5">Delete</h1>
+                        <button type="button" class="close btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         {% csrf_token %}
@@ -51,48 +83,84 @@
             </div>
         </div>
     </div>
-    <div class="modal fade" id="updatemodal" tabindex="-1" >
+    <div class="modal fade" id="updatemodal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" >
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Update Password</h5>
+                    <button type="button" class="close btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
                 <form method="POST" name="myform" action="{% url 'update' %}">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Modal title</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
                     <div class="modal-body">
                         {% csrf_token %}
-                        <div id="error"></div>
-                        <label class="form-label">Password </label>
-                        <input type="password" name="password" class="form-control" required>
-                        <label class="form-label">Confirm Password</label>
-                        <input type="password" name="confirmpassword" class="form-control" required>
+                        <div id="updt_form_error"class="alert alert-danger"></div>
+                        <div class="outerdiv my-4">
+                            <input type="password" name="password" class="form-control" value="" placeholder="Password" required>
+                            <span class="fa fa-eye-slash mx-2 displaypassword"></span>
+                        </div>
+                        <div class="outerdiv my-4">
+                            <input type="password" name="confirmpassword" class="form-control" value="" placeholder=" Confirm Password" required>
+                            <span class="fa fa-eye-slash mx-2 displaypassword"></span>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <input type="hidden" id="update_rec_id"  name="id">
-                        <button class="btn btn-primary" id="updatebtn">Update</button>
+                        <input type="submit" class="btn btn-primary" id="updatebtn" role="button" value="Update">
+                        <button type="button" class="close btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="addmodal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <form method="POST" name="addform" id="addform" action="{% url 'add_account' %}">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Add Details</h5>
+                        <button type="button" class="close btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        {% csrf_token %}
+                        <div id="add_form_error"></div>
+                        <div class="outerdiv my-4">
+                            <input type="text" name="account_name" class="form-control" placeholder="Account Name" required>
+                        </div>
+                        <div class="outerdiv my-4">
+                            <input type="text" name="user_name" class="form-control" placeholder="User Name" required>
+                        </div>
+                        <div class="outerdiv my-4">
+                            <input type="password" name="password" class="form-control inputpassword"placeholder="Password" required>
+                            <span class="fa fa-eye-slash mx-2 displaypassword"></span>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="modaladdaccbtn">Add</button>
                         <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
-    <div>
-        <div class="container pt-3">
-            <div class="d-flex justify-content-between my-2">
-                <h4>Welcome {{ user.username|capfirst }} </h4>
-                <a href="{% url 'logout' %}" class="btn btn-warning btn-sm"> 
-                    <i class="fa fa-sign-out-alt"></i>
-                    <span>Logout</span>
-                </a>
-            </div>
-            {% if details.values %}
-                <div class="alert alert-info"> Here are the list of passwords which you have saved!</div>
-                    {% if messages %}
-                        {% for message in messages %}
-                            <div class="message alert alert-success">{{ message }}</div>
-                        {% endfor %}
-                    {% endif %}
-                    <table class="table">
+    <div class="container pt-3">
+        <div class="d-flex justify-content-between my-2">
+            <h4>Welcome {{ user.username|capfirst }} </h4>
+            <a href="{% url 'logout' %}" class="btn btn-warning btn-sm"> 
+                <i class="fa fa-sign-out-alt"></i>
+                <span>Logout</span>
+            </a>
+        </div>
+        {% if details.values %}
+            <div class="alert alert-info"> Here are the list of passwords which you have saved!</div>
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="d-flex align-items-center justify-content-center message">
+                            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+                <table class="table">
+                    <thead>
                         <tr>
                             <th>Account Name </th>
                             <th>User Name </th>
@@ -101,6 +169,8 @@
                             <th> Update </th>
                             <th> Delete </th>
                         </tr>
+                    </thead>
+                    <tbody>
                         {% for password_list in details %}
                         <tr>
                             <td>{{ password_list.account_name }}</td>
@@ -108,17 +178,28 @@
                             <td class="pwd">{{ password_list.password }}</td>
                             <td class="showPassword"><span class="fa fa-eye-slash" style="margin-left: 50px;" id="togglePwd"></span></td>
                             <td> <a class="update btn btn-dark btn-sm" href="{% url 'update' %}"  data-bs-toggle="modal" data-bs-target="#updatemodal" data-id="{{ password_list.id }}"> Update </a></td>
-                            <td class="deletebtn2"><a class="del btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deletemodal" data-id="{{ password_list.id }}"> Delete </a></td></td>
-                            {% endfor %}
+                            <td class="deletebtn2"><a class="del btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deletemodal" data-id="{{ password_list.id }}"> Delete </a></td>
                         </tr>
-                    </table>
-            {% else %}
-                <div class="alert alert-warning">You haven't stored any passwords!</div>
-            {% endif %}
-                <a id="add-account" href="{% url 'add_acc_details' %}" class="btn btn-primary btn-sm">Add</a>
-        </div>
+                        {% endfor %}
+                    </tbody>
+                </table>
+        {% else %}
+            <div class="alert alert-warning">You haven't stored any passwords!</div>
+        {% endif %}
+            <a data-bs-toggle="modal" data-bs-target="#addmodal" class="btn btn-primary btn-sm"> Add </a>
     </div>
     <script>
+        var input = document.getElementsByClassName("form-control")
+        for(i=0;i<input.length;i++){
+            input[i].addEventListener("focus",() => {
+                var outer = event.srcElement.parentNode
+                outer.style["border"] = "2px solid #657dde"
+                })
+            input[i].addEventListener("focusout",() => {
+                var outer = event.srcElement.parentNode
+                outer.style["border"] = "1px solid #8c8c8c"
+                })
+            }
         $('.showPassword').on("click",function(){
             var pwd = $(this).prev("td")
             pwd[0].style["-webkit-text-security"]="none"
@@ -126,6 +207,16 @@
             pwd_icon_class.className ="fa fa-eye"
             setTimeout(hidepassword,2000,pwd,pwd_icon_class)
 
+        })
+        $('.displaypassword').on("click",function(){
+            let showpwdicon = $(this)[0]
+            var pwd = $(this).prev("input")[0]
+            pwd.setAttribute("type","text")
+            showpwdicon.className="fa fa-eye mx-2 displaypassword"
+            setTimeout(function(){
+                pwd.setAttribute("type","password")
+                showpwdicon.className="fa fa-eye-slash mx-2 displaypassword" 
+            },3000)
         })
         function hidepassword(pwd,pwd_icon_class)
         {
@@ -149,25 +240,76 @@
         })
         $("#updatebtn").on("click",function(clickEvent){
             var password = myform.password.value
-            console.log(password)
             var  c_password = myform.confirmpassword.value
-            console.log(c_password)
-            if(password!=c_password)
+            var error = document.getElementById("updt_form_error")
+            var ele= document.getElementsByClassName("alert-danger")[0]
+            if(password==="" || c_password==="")
             {
                 clickEvent.preventDefault()
-                var error = document.getElementById("error")
+                ele.style.opacity = 1
+                ele.style.display = "block"
+                error.innerText ="The fields cannot be empty"
+                setTimeout(function(){
+                error.innerText="";
+                ele.style.opacity = 0;
+                ele.style.display = "none";
+                },3000)
+
+                
+            }
+            else if(c_password!=password)
+            {
+                clickEvent.preventDefault()
+                ele.style.opacity = 1
+                ele.style.display = "block"
                 error.innerText="The two passwords didn't match!"
+                setTimeout(function(){
+                error.innerText="";
+                ele.style.opacity = 0;
+                ele.style.display = "none";
+                },3000)
+                
             }
             else
             {
+                error.innerText=""
+                password.innerText=""
+                c_password.innerText=""
                 $("#updatemodal").modal('hide')
+                var x = document.getElementsByClassName("message")[0]
+                console.log(x)
             }
-
         })
         var message = document.getElementsByClassName("message")[0]
         setTimeout(function(){
-        message.remove()},3000)
+            message.style.visibility = "hidden"
+            message.style.height = 0
+        },3000)
+        $("#modaladdaccbtn").on("click",function(clickEvent){
+            console.log("hello there!")
+            var account_name = addform.account_name.value
+            var  user_name = addform.user_name.value
+            var password = addform.password.value
+            var error = document.getElementById("add_form_error")
+            console.log(account_name)
+            console.log(user_name)
+            console.log(password)
+            if(account_name==="" || user_name===""|| password==="")
+            {
+                clickEvent.preventDefault()
+                console.log("empty")
+                error.innerHTML= "The fields cannot be empty"
+            }
+            else
+            {
+                document.getElementById("addform").submit()
+            }
+        })
+        $(".close").on("click",function(){
+            myform.input.value=""
+        })
     </script>
+
     
 </body>
 </html>

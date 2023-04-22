@@ -1,0 +1,49 @@
+.background
+{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background:linear-gradient(90deg,rgba(101, 125, 222, 0.7),rgba(41, 57, 196, 0.7)),url("https://media.istockphoto.com/id/647273372/es/vector/seguridad-de-la-red-global-vector-de.jpg?s=612x612&w=0&k=20&c=spzAKN2t8RnALMvUsNmzOblXaDwE_RHA9CGyzUOtHDM=");
+    background-size: cover;
+}
+
+.background .btn
+{
+    border: none;
+}
+
+.container
+{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width:400px;
+    padding: 30px;
+    flex-direction: column;
+    background-color: white;
+    margin-top: 150px;
+    border-radius: 15px;
+    box-shadow: 5px 5px 5px #484848;
+}
+
+.form-control
+{
+    width: 300px;
+    height: 40px;
+    border: none;
+    border-radius: 10px;
+}
+
+.form-control:focus
+{
+    box-shadow: none;
+}
+
+.outerdiv
+{
+    border-radius: 10px;
+    border: 1px solid #8c8c8c;
+    align-items: center;
+    display: flex;
+}

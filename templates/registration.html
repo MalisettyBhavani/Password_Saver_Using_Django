@@ -1,58 +1,43 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
-    <link rel="stylesheet" href = "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.2/css/all.min.css"
+    integrity="sha512-3M00D/rn8n+2ZVXBO9Hib0GKNpkm8MSUU/e2VNthDyBYxKWG+BftNYYcuEjXlyrSO637tidzMBXfE7sQm0INUg=="
+    crossorigin="anonymous" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+<link rel="stylesheet" href = "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" 
+integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
+<script src="https://kit.fontawesome.com/a076d05399.js"></script>
+<link rel="stylesheet" href="{% static 'css/style.css' %}">
     <title>Register</title>
     <style>
-        .bg
-        {
-            width: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background:linear-gradient(90deg,rgba(101, 125, 222, 0.7),rgba(41, 57, 196, 0.7)),url("https://media.istockphoto.com/id/647273372/es/vector/seguridad-de-la-red-global-vector-de.jpg?s=612x612&w=0&k=20&c=spzAKN2t8RnALMvUsNmzOblXaDwE_RHA9CGyzUOtHDM=");
-            background-size: cover;
-
-        } 
         .container
         {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width:400px;
-            padding: 30px;
-            flex-direction: column;
-            background-color: white;
             margin-top: 100px;
-            border-radius: 15px;
         }
-        .form-control
-        {
-            width: 300px;
-            margin-bottom: 20px;
-        }
-
     </style>
 </head>
 
-<body class="bg">
+<body class="background">
     <div class="container">
-        <h3 class="fw-bold text-center my-4">Register</h3>
+        <h3 class="fw-bold text-center">Register</h3>
             <form method="POST">
                 {% csrf_token %}
                 {% for i in reg_form %}
-                    <div>{{ i }}</div>
+                    <div class="outerdiv my-4">
+                        {{ i }}
+                    </div>
                 {% endfor %} 
                 {% if error %} 
                     {{ error }}
                 {% endif %}
                 <div class="input-group">
-                    <input type="submit" class="bg btn btn-primary rounded-pill" value="Register" data-bs-toggle="modal" data-bs-target="#registered-modal" 
+                    <input type="submit" class="background btn btn-primary rounded-pill" value="Register" data-bs-toggle="modal" data-bs-target="#registered-modal" 
                     role="button" onsubmit="showError()">
                 </div>
                 <div class="text-center my-2">  Already have an account?
@@ -95,6 +80,9 @@
             let element = "{{ reg_form.erros }}"
             console.log(element)
         }
+        var ele = document.getElementById("id_password1")
+        var icon = document.createElement('span'); // is a node
+        icon.setAttribute("class","fa fa-eye-slash mx-2 displaypassword")
     </script>
 </body>
 </html>

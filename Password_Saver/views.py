@@ -22,10 +22,6 @@ def index(request):
             registered = True
             reg_form = RegistrationForm()
         else:
-            print(reg_form.errors)
-            print(reg_form.errors.values())
-            print(list(reg_form.errors.values()))
-
             error=list(reg_form.errors.values())[0]
     return render(request,'registration.html',{'reg_form':reg_form,'registered':registered,'error':error})    
 
@@ -47,7 +43,7 @@ def login_page(request):
 
 @login_required
 def list_passwords(request): 
-    if request.user.is_authenticated:                                        
+    if request.user.is_authenticated:                                  
         details=AccountInfo.objects.values().filter(user__username=request.user)
         x=details#list of dictionaries
         for i in x:
@@ -56,6 +52,7 @@ def list_passwords(request):
             except:
                 pass
         return render(request,'home.html',{'details':details})
+    
     
 @login_required
 def user_logout(request):
@@ -75,12 +72,28 @@ def add_acc_details(request):
         add_details = AccountInfoForm(request.user)
     return render(request,'add_account.html',{'add_account':add_details})
 
+@login_required
+def add_acc(request):
+    if request.method=="POST":
+        add_details = AccountInfoForm(request.user,request.POST)
+        if add_details.is_valid():
+            add_details.save(commit=False)
+            add_details.instance.user = request.user
+            add_details.save()
+            messages.success(request,"Account details are added successfully!")
+            return HttpResponseRedirect(reverse("list"))
+        else:
+            messages.warning(request,"This account info already exists!")
+            #print(messages.get_messages(request))###this is getting printed in console.log
+            return HttpResponseRedirect(reverse("list"))
+
+
 def update_password(request):
     if request.method == "POST":
         password = request.POST.get("password")
         encrypted_password = encrypt(password)
         id = request.POST.get("id")
-        AccountInfo.objects.filter(user_id=request.user.id,id=id).update(password=encrypted_password)
+        update_data_obj=AccountInfo.objects.filter(user_id=request.user.id,id=id).values().update(password=encrypted_password)
         messages.success(request,"Password updated successfully")
         return HttpResponseRedirect(reverse("list"))
 
@@ -92,6 +105,7 @@ def delete_info(request):
         if len(current_user_objects)!=0:
             delete_obj=get_object_or_404(AccountInfo,id=id)
             delete_obj.delete()
+        messages.success(request,"An entry has been successfully deleted")
         return HttpResponseRedirect(reverse("list"))
     
 
