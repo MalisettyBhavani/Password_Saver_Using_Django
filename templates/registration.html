@@ -21,7 +21,7 @@
     </style>
 </head>
 <body class="background">
-    <div class="container">
+    <div class="container" id="registrationform">
         <h3 class="fw-bold text-center">Register</h3>
             <form method="POST">
                 {% csrf_token %}
@@ -61,19 +61,19 @@
         {% endif %}
     </div>
     <script>
-        var span = "<span class='fa fa-eye-slash mx-2 displaypassword'></span>"
+        var span = "<span class='fa fa-eye mx-2 displaypassword'></span>"
         document.getElementsByClassName("outerdiv")[2].innerHTML+=span
         document.getElementsByClassName("outerdiv")[3].innerHTML+=span
         $('.displaypassword').on("click",function(){
             let showpwdicon = $(this)[0]
             var pwd = $(this).prev("input")[0]
             pwd.setAttribute("type","text")
-            showpwdicon.classList.remove("fa-eye-slash")
-            showpwdicon.classList.add("fa-eye")
+            showpwdicon.classList.remove("fa-eye")
+            showpwdicon.classList.add("fa-eye-slash")
             setTimeout(function(){
                 pwd.setAttribute("type","password")
-                showpwdicon.classList.remove("fa-eye")
-                showpwdicon.classList.add("fa-eye-slash")
+                showpwdicon.classList.remove("fa-eye-slash")
+                showpwdicon.classList.add("fa-eye")
             },3000)
         })
         var isregistered = "{{ registered }}"

@@ -1,12 +1,15 @@
+from typing import Any
 from django.shortcuts import render,get_object_or_404
 from django.urls import reverse
 from Password_Saver.forms import RegistrationForm,LoginForm,AccountInfoForm
 from django.contrib.auth import authenticate,login,logout
-from django.http import HttpResponse,HttpResponseRedirect
+from django.http import HttpRequest, HttpResponse,HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from Password_Saver.models import AccountInfo
 from Password_Saver.encrypt_decrypt import encrypt,decrypt
 from django.contrib import messages
+from django.views.generic import DeleteView
+from django.urls import reverse_lazy
 # Create your views here.
 def index(request):
     registered = False
@@ -110,7 +113,4 @@ def delete_info(request):
         else:
             messages.warning(request,"An error occured while deleting. Please try again")
         return HttpResponseRedirect(reverse("list"))
-    
-
-
     
