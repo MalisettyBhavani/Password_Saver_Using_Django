@@ -13,8 +13,6 @@
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <script src="{% static 'script.js' %}"></script>
     <title>Login</title>
-    <style>
-    </style>
 </head>
 <body class="background">  
     <div class="container" id="loginform">
@@ -38,18 +36,6 @@
         </form>
     </div>                       
     <script>
-        var input = document.getElementsByClassName("form-control")
-        for(i=0;i<input.length;i++){
-            input[i].addEventListener("focus",() => {
-                var outer = event.srcElement.parentNode
-                outer.style["border"] = "2px solid #657dde"
-                })
-            input[i].addEventListener("focusout",() => {
-                var outer = event.srcElement.parentNode
-                outer.style["border"] = "1px solid #8c8c8c"
-                })
-            }
-
         var span = "<span class='fa fa-eye mx-2 displaypassword'></span>"
         document.getElementsByClassName("outerdiv")[1].innerHTML+=span
         $('.displaypassword').on("click",function(){
@@ -64,6 +50,19 @@
                 showpwdicon.classList.add("fa-eye")
             },3000)
         })
+
+        var input = document.getElementsByClassName("form-control")
+        for(i=0;i<input.length;i++){
+            input[i].addEventListener("focus",() => {
+                var outer = event.srcElement.parentNode
+                outer.style["border"] = "1px solid #657dde"
+                })
+            input[i].addEventListener("focusout",() => {
+                var outer = event.srcElement.parentNode
+                outer.style["border"] = "1px solid #8c8c8c"
+                })
+            }
+
         var message = document.getElementsByClassName("message")[0]
         setTimeout(function(){
             message.remove()},3000)

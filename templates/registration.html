@@ -13,12 +13,6 @@
     <script src="https://kit.fontawesome.com/a076d05399.js"></script>
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <title>Register</title>
-    <style>
-        .container
-        {
-            margin-top: 100px;
-        }
-    </style>
 </head>
 <body class="background">
     <div class="container" id="registrationform">
@@ -92,7 +86,7 @@
         for(i=0;i<input.length;i++){
             input[i].addEventListener("focus",() => {
                 var outer = event.srcElement.parentNode
-                outer.style["border"] = "2px solid #657dde"
+                outer.style["border"] = "1px solid #657dde"
                 })
             input[i].addEventListener("focusout",() => {
                 var outer = event.srcElement.parentNode
