@@ -9,7 +9,8 @@ Password Management: Add, update, and delete passwords stored in an encrypted fo
 Secure Access: All data is encrypted to ensure security and confidentiality.
 
 Technologies
-Backend: Django (Python)
+Backend: Django (Python)\n
+
 Frontend: HTML, CSS, Java Script
 Setup and Installation
 Clone the repository
