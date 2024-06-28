@@ -1,4 +1,3 @@
-Password Saver Application
 Description
 Password Saver is a secure application designed to help users manage their various online passwords efficiently and securely. This application provides a user-friendly interface for storing, retrieving, updating, and deleting passwords associated with different online accounts.
 
@@ -7,7 +6,6 @@ User Registration: Securely register and create a new account.
 User Login: Log in with credentials and multi-factor authentication for added security.
 Password Management: Add, update, and delete passwords stored in an encrypted format.
 Secure Access: All data is encrypted to ensure security and confidentiality.
-
 Technologies
 Backend: Django (Python)
 
