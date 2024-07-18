@@ -1,0 +1,9 @@
+asgiref==3.8.1
+cffi==1.16.0
+cryptography==42.0.8
+Django==5.0.6
+gunicorn==22.0.0
+packaging==24.1
+pycparser==2.22
+pyotp==2.9.0
+sqlparse==0.5.0

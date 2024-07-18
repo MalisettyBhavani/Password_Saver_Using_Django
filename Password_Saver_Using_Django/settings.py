@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-tfbyn+5i!d+jw7kb59e50eyjzsc=a13evfdmvu!r6jk)r9jjqu
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["safe-password-app.azurewebsites.net"]
 
 
 # Application definition
@@ -39,8 +39,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'bootstrap_modal_forms',
-    'phonenumber_field',
     'Password_Saver'
 ]
 
@@ -140,4 +138,12 @@ STATICFILES_DIRS = [
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 ENCRYPT_KEY=b'XUFnd-wbygKXrn_itK4uY3Z870djxc3oTbYMbWqMZIc='
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_PORT = 587
+EMAIL_HOST_USER="18r01a0594@gmail.com"
+EMAIL_HOST_PASSWORD = "obgkhffhweidqxhc"
+EMAIL_USE_TLS = True
+EMAIL_USE_SSL = False
+
 

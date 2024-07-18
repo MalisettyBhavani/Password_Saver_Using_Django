@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.2/css/all.min.css" integrity="sha512-3M00D/rn8n+2ZVXBO9Hib0GKNpkm8MSUU/e2VNthDyBYxKWG+BftNYYcuEjXlyrSO637tidzMBXfE7sQm0INUg==" crossorigin="anonymous" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+    <link rel="stylesheet" href = "https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" 
+    integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js"></script>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <title>Verify</title>
+</head>
+<body class="background">
+    <div class="container" id="registrationform">
+        <h3 class="fw-bold text-center">Verify your identity</h3>
+        <form method="POST">
+            {% csrf_token %}
+            <div>
+                <label for="otp">OTP :</label>
+                <div>
+                    <input type="text" id="otp" class="form-control  my-2" name="otp" required>
+                </div>
+                <button data-bs-toggle="modal" data-bs-target="#registered-modal" >Verify</button>
+            </div>           
+        </form> 
+        {% if registered %}
+            <div id="register">
+                <div class="modal" id="registered-modal" tabindex="-1">
+                    <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Registration Successful</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <p>Congratulations! Your account has been successfully created.</p>
+                            </div>
+                            <div class="modal-footer">
+                                <a class="btn btn-success" href="{% url 'login' %}">Login</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
+    </div>
+    <script>
+        var isregistered = "{{ registered }}"
+        // if (isregistered=="True")
+        // {
+        //     var myModal = new bootstrap.Modal(document.getElementById("registered-modal"),{
+        //         keyboard:false
+        //     })
+        //     myModal.show()
+        // }
+        $(document).ready(function() {
+            $("#otp").change (function() {
+                let otp = $("#otp").val();
+                console.log(otp)
+                if (otp == '{{otp}}') {
+                    console.log("OTP Matched!!")
+                    $.ajax({
+                        type: "POST",
+                        url: '{% url "verifyotp" %}',
+                        data: {
+                            'otp': otp,
+                            "email": "{{email}}",
+                            "username": "{{username}}",
+                            "password": "{{password}}"
+                        },
+                        success: function (data) {
+                            console.log("OTP Verified")
+                            alert("Your account has been created successfully!")
+                            console.log("hello")
+                            alert("hello")
+                            console.log("the value of is registered is",isregistered)
+                        },
+                        error: function (xhr, status, error) {
+                            console.error("Error in AJAX request: " + error);
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html> 
